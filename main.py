@@ -56,7 +56,7 @@ def main():
                 if not asteroid.collides_with(shot):
                     continue
                 log_event("asteroid_shot")
-                asteroid.kill()
+                asteroid.split()
                 shot.kill()
 
             if not asteroid.collides_with(player):
