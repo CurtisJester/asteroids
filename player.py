@@ -1,12 +1,22 @@
+from re import A
 import pygame
 from circleshape import CircleShape
-from constants import LINE_WIDTH, PLAYER_RADIUS, PLAYER_SPEED, PLAYER_TURN_SPEED
+from shot import Shot
+from constants import (
+    LINE_WIDTH,
+    PLAYER_RADIUS,
+    PLAYER_SHOOT_COOLDOWN_SECONDS,
+    PLAYER_SPEED,
+    PLAYER_TURN_SPEED,
+    PLAYER_SHOOT_SPEED,
+)
 
 
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, radius=PLAYER_RADIUS)
         self.rotation = 0
+        self.shot_cooldown = 0
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -26,8 +36,15 @@ class Player(CircleShape):
         self.position += rotated_with_speed_vector
 
     def update(self, dt):
+        self.shot_cooldown -= dt
         keys = pygame.key.get_pressed()
 
+        if keys[pygame.K_SPACE]:
+            if self.shot_cooldown > 0:
+                pass
+            else:
+                self.shot_cooldown = PLAYER_SHOOT_COOLDOWN_SECONDS
+                self.shoot()
         if keys[pygame.K_w]:
             self.move(dt)
         if keys[pygame.K_s]:
@@ -36,6 +53,10 @@ class Player(CircleShape):
             self.rotate(dt)
         if keys[pygame.K_d]:
             self.rotate(-dt)
+
+    def shoot(self):
+        shot = Shot(self.position.x, self.position.y)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
 
     # Override draw
     def draw(self, screen):
