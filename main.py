@@ -52,6 +52,12 @@ def main():
 
         # Collision Detection
         for asteroid in asteroids:
+            for shot in shots:
+                if not asteroid.collides_with(shot):
+                    continue
+                asteroid.kill()
+                shot.kill()
+
             if not asteroid.collides_with(player):
                 continue
             log_event("player_hit")
