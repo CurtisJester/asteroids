@@ -1,4 +1,3 @@
-from re import A
 import pygame
 from circleshape import CircleShape
 from shot import Shot
